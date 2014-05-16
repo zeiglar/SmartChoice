@@ -1,0 +1,260 @@
+﻿@section Styles {
+    <link href="@Url.Content("~/Content/Home.css")" rel="stylesheet" type="text/css" />
+}
+
+@section JavaScripts {
+    <script src="@Url.Content("~/Scripts/Funcs/Home.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.form.js")" type="text/javascript"></script>
+}
+
+@section RunAfterReady{
+    InitialHome();
+InitialSelectTag();
+
+    $('form').ajaxForm({
+        success: function (logs) {
+            @*FillSuburbsInfo(logs);*@
+            FillSettingsInfo(logs);
+        }
+    });
+}
+
+@section JSAddon{
+    function HidePopupContent(){
+        $("div.popupContent").fadeOut("slow");
+        $("div#results").fadeIn("slow");
+    }
+
+    function CheckCSVFile(){
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '@Url.Action("CheckCSVFile", "Home")',
+            success: function (data) {
+                AnalyseCSVFile(data);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+    
+    function ListSuburbs() {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '@Url.Action("Initialise", "Home")',
+            success: function (logs) {
+                FillSuburbsInfo(logs);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+    function GetSettingsInfo(){
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '@Url.Action("GetSettingsInfo", "Home")',
+            success: function (logs) {
+                FillSettingsInfo(logs);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+    function GetSuburbs(){
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '@Url.Action("GetSuburbs", "Home")',
+            success: function (logs) {
+                FillSuburbsInfo(logs);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+    function GetProperties(id, name, state, postcode){
+        var content = $('div#p' + id + '.properties');
+        if(content.text().length !== 0)
+            content.empty();
+        else{
+            content.text("Loading...");
+
+            var targetObject = {
+                BehaviorType:1,
+                MinPrice:$('select#minPrice').val(),
+                MaxPrice:$('select#maxPrice').val()
+            }
+
+            var suburbObject = {
+                Name:name,
+                State:state,
+                Postcode:postcode
+            }
+
+            var data = JSON.stringify({
+                target:targetObject,
+                suburb:suburbObject
+            });
+    
+            $.ajax({
+                url: '@Url.Action("GetProperties", "Home")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: data,
+                success: function (logs) {
+                    FillPropertiesInfo(id, logs);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+    }
+
+    function GetPropertyInfo(){
+    }
+}
+
+
+<section class="featured">
+    <div class="content-wrapper">
+        <div class="float-left">
+            <p class="site-title">
+                <a href="~/">Property Seek</a>
+            </p>
+        </div>
+        <div style="clear: both"></div>
+        <div id="status">
+            @ViewBag.Status
+        </div>
+        @*@using (Html.BeginForm("Initialise", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))*@
+        @using (Ajax.BeginForm("Initialise", "Home", new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data" }))
+        {
+            <div class="selecter">
+                <input type="submit" value="Go" />
+            </div>
+            <div class="selecter">
+                <input type="file" name="file" id="uploadFile" />
+            </div>
+        }
+        <div class="clearer"></div>
+        <div class="selecter">
+            <span class="priceSearch">Min Price</span>
+            <select id="minPrice"></select>
+            <span class="priceSearch">Max Price</span>
+            <select id="maxPrice"></select>
+        </div>
+    </div>
+</section>
+
+<section class="content-wrapper main-content clear-fix">
+    <div id="results">
+    </div>
+</section>
+
+<div class="popupContent" ondblclick="HidePopupContent();">
+    <div id="popupTitle">
+        A brief summary of how much you could claim your tax refund.
+    </div>
+    <div id="bankMortgage">
+        <span class="calItemText">Property Price
+        </span>
+        <input class="inputValue" type="number" id="inpPropertyPrice" value ="0" />
+
+        <span class="calItemText">Deposit
+        </span>
+        <input class="inputValue" type="number" id="inpDeposit" value ="0" />
+
+        <div class="total">
+            <span class="calTotalText">Total Mortgage
+            </span>
+            <input class="inputTotalValue" type="number" id="inpMortgage" value="0" />
+        </div>
+    </div>
+
+    <div id="yearlyCost">
+        <span class="calItemText">Mortgage Rate (%)
+        </span>
+        <input class="inputValue" type="number" id="inpMortgagRate" value="0" />
+
+        <span class="calItemText">Strate (pa)
+        </span>
+        <input class="inputValue" type="number" id="inpStrate" value="0" />
+
+        <span class="calItemText">Water (pa)
+        </span>
+        <input class="inputValue" type="number" id="inpWater" value="0" />
+        <span class="calItemText">Council Rate (pa)
+        </span>
+        <input class="inputValue" type="number" id="inpCouncil" value="0" />
+
+        <div class="total">
+            <span class="calTotalText">Total Year Cash Costs
+            </span>
+            <input class="inputTotalValue" type="number" id="inpYearlyCost" value="0" />
+        </div>
+    </div>
+
+    <div id="rentIncome">
+        <span class="calItemText">Rental
+        </span>
+        <input class="inputValue" type="number" id="inpRental" value="0" />
+
+        <span class="calItemText">Agent Commission (%)
+        </span>
+        <input class="inputValue" type="number" id="inpAgentCommission" value="0" />
+
+        <span class="calItemText">Letting Fee
+        </span>
+        <input class="inputValue" type="number" id="inpLettingFee" value="0" />
+
+        <div class="total">
+            <span class="calTotalText">Total Rental Income
+            </span>
+            <input class="inputTotalValue" type="number" id="inpTotalRentalIncome" value="0" />
+        </div>
+    </div>
+
+    <div id="yield">
+        <span class="calItemText">Cash Profit
+        </span>
+        <input class="inputValue" type="number" id="inpCashProfit" value="0" />
+
+        <span class="calItemText">Building Depreciation
+        </span>
+        <input class="inputValue" type="number" id="inpBuildingDepreciation" value="0" />
+
+        <span class="calItemText">Non-Cash Profit
+        </span>
+        <input class="inputValue" type="number" id="inpNonCashProfit" value="0" />
+
+        <span class="calItemText">Taxable Income
+        </span>
+        <input class="inputValue" type="number" id="inpTaxableIncome" value="0" />
+
+        <span class="calItemText">Tax Benefit
+        </span>
+        <input class="inputValue" type="number" id="inpTaxBenefit" value="0" />
+
+        <div class="total">
+            <span class="calTotalText">Total Benefit
+            </span>
+            <input class="inputTotalValue" type="number" id="inpTotalBenefit" value="0" />
+        </div>
+
+        <div class="total">
+            <span class="calTotalText">Annual Yield (%)
+            </span>
+            <input class="inputTotalValue" type="number" id="inpAnnualYield" value="0" />
+        </div>
+    </div>
+
+    <div>
+        <button id="refreshButton" onclick="CalculateYield();">Refresh</button>
+    </div>
+</div>
