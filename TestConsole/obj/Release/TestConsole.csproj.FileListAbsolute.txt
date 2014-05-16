@@ -1,0 +1,15 @@
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\TestConsole.exe.config
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\TestConsole.exe
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\TestConsole.pdb
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\HtmlAgilityPack.dll
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\Newtonsoft.Json.dll
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\Source.dll
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\FileHelpers.dll
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\Source.pdb
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\HtmlAgilityPack.pdb
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\HtmlAgilityPack.xml
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\Newtonsoft.Json.xml
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\bin\Release\FileHelpers.xml
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\obj\Release\TestConsole.csprojResolveAssemblyReference.cache
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\obj\Release\TestConsole.exe
+C:\Users\Emotum\Desktop\SmartChoice\TestConsole\obj\Release\TestConsole.pdb
